@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-db
+  labels:
+    app: app-db
+spec:
+  selector:
+    matchLabels:
+      app: app-db
+  replicas: 1    
+  template:
+    metadata:
+      labels:
+        app: app-db
+    spec:
+      containers:
+        - name: db
+          image: adhaammohammed/vprofiledb
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: db-app-data
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                   name: app-secret
+                   key: db-pass
+
